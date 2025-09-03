@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Essay Generator AI (Word Count)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    h1 {
+      color: #00ffff;
+    }
+    input, button {
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 1rem;
+    }
+    input {
+      background: #1e1e1e;
+      color: #eee;
+      width: 60%;
+    }
+    button {
+      background: #00ffff;
+      color: #000;
+      cursor: pointer;
+    }
+    .response {
+      background: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 10px;
+      width: 80%;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .word-count {
+      margin-top: 1rem;
+      color: #00ffff;
+      font-size: 1.1rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+    .input-group input {
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Essay Generator AI</h1>
+
+  <div class="input-group">
+    <input type="text" id="topic" placeholder="Enter essay topic..." />
+    <input type="number" id="wordTarget" placeholder="Word count (e.g. 150)" min="50" />
+  </div>
+
+  <button onclick="generateEssay()">Generate Essay</button>
+
+  <div class="response" id="output"></div>
+  <div class="word-count" id="wordCount">Words: 0</div>
+
+  <script>
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+    }
+
+    function generateMockEssay(topic, targetWords) {
+      const sentenceTemplates = [
+        `The topic of "${topic}" is incredibly important in today's world.`,
+        `Many people have debated the implications of "${topic}".`,
+        `"${topic}" influences various aspects of our lives including society, technology, and education.`,
+        `In understanding "${topic}", we gain insight into the challenges we face.`,
+        `Experts argue that "${topic}" plays a critical role in shaping the future.`,
+        `Historically, "${topic}" has sparked widespread discussion.`,
+        `"${topic}" remains a cornerstone of modern development.`,
+        `One cannot ignore the relevance of "${topic}" in global affairs.`,
+        `When discussing progress, "${topic}" is often at the center.`,
+        `The future of "${topic}" depends on innovation, awareness, and education.`
+      ];
+
+      let essay = `Title: ${topic}\n\n`;
+      let currentWords = countWords(essay);
+
+      while (currentWords < targetWords) {
+        const sentence = sentenceTemplates[Math.floor(Math.random() * sentenceTemplates.length)];
+        essay += sentence + ' ';
+        currentWords = countWords(essay);
+      }
+
+      return essay.trim();
+    }
+
+    function generateEssay() {
+      const topic = document.getElementById('topic').value.trim();
+      const wordTarget = parseInt(document.getElementById('wordTarget').value.trim(), 10);
+      const output = document.getElementById('output');
+      const wordCountDisplay = document.getElementById('wordCount');
+
+      if (!topic) {
+        output.textContent = '❗ Please enter a topic.';
+        wordCountDisplay.textContent = 'Words: 0';
+        return;
+      }
+
+      if (!wordTarget || wordTarget < 50) {
+        output.textContent = '❗ Please enter a valid word count (minimum 50).';
+        wordCountDisplay.textContent = 'Words: 0';
+        return;
+      }
+
+      output.textContent = 'Generating essay...';
+      wordCountDisplay.textContent = 'Words: 0';
+
+      setTimeout(() => {
+        const essay = generateMockEssay(topic, wordTarget);
+        output.textContent = essay;
+        wordCountDisplay.textContent = `Words: ${countWords(essay)}`;
+      }, 800); // Simulate delay
+    }
+  </script>
+</body>
+</html>
